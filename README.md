@@ -1,6 +1,6 @@
 <picture>
 <img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/screenshot.png" width="300" hspace="10"/>
-<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/metal_llama.png" height="300" hspace="10"/>
+<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/metal_llama.png" width="300" hspace="10"/>
 </picture>
 
 # Rusty Llama Webapp
