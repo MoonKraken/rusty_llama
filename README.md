@@ -1,6 +1,5 @@
 <picture>
-<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/screenshot.png" width="300" hspace="10"/>
-<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/metal_llama.png" width="300" hspace="10"/>
+<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/screenshot.png" />
 </picture>
 
 # Rusty Llama Webapp
@@ -23,3 +22,7 @@ To run the project locally, `cargo leptos watch` in the project directory. Then 
 ## Tested Models
 
 * [Wizard-Vicuna-7B-Uncensored.ggmlv3.q8_0.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGML)
+
+<picture>
+<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/metal_llama.png" />
+</picture>
