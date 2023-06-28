@@ -29,22 +29,22 @@ pub fn App(cx: Scope) -> impl IntoView {
 
     create_effect(cx, move |_| {
         if let Some(_) = send.input().get() {
-            let mut curr = conversation.get_untracked();
             let model_message = Message {
                 text: String::from("..."),
                 user: false,
             };
-            curr.messages.push(model_message);
-            set_conversation(curr);
+
+            set_conversation.update(move |c| {
+                c.messages.push(model_message);
+            });
         }
     });
 
     create_effect(cx, move |_| {
         if let Some(Ok(response)) = send.value().get() {
-            let mut curr = conversation.get_untracked();
-            let last: &mut Message = curr.messages.last_mut().unwrap();
-            last.text = response;
-            set_conversation(curr);
+            set_conversation.update(move |c| {
+                c.messages.last_mut().unwrap().text = response;
+            });
         }
     });
 
