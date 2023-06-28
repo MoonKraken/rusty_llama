@@ -2,6 +2,7 @@
 name = "leptos_start"
 version = "0.1.0"
 edition = "2021"
+authors = ["Code to the Moon <ken@cttm.io>"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]

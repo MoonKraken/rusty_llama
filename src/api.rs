@@ -5,7 +5,10 @@ use crate::model::conversation::Conversation;
 #[server(Converse "/api")]
 pub async fn converse(cx: Scope, prompt: Conversation) -> Result<String, ServerFnError> {
     use llm::models::Llama;
-    let model = extract(cx, |data: actix_web::web::Data<Llama>| {
+    use leptos_actix::extract;
+    use actix_web::web::Data;
+    use actix_web::dev::ConnectionInfo;
+    let model = extract(cx, |data: Data<Llama>, _connection: ConnectionInfo| async {
         data.into_inner()
     })
     .await?;
@@ -65,7 +68,6 @@ cfg_if! {
             buf: &'a mut String,
             out_str: &'a mut String,
         ) -> impl FnMut(llm::InferenceResponse) -> Result<llm::InferenceFeedback, Infallible> + 'a {
-
             use llm::InferenceFeedback::Halt;
             use llm::InferenceFeedback::Continue;
 
@@ -94,18 +96,4 @@ cfg_if! {
             }
         }
     }
-}
-#[cfg(feature = "ssr")]
-pub async fn extract<F, E, T>(cx: Scope, f: F) -> Result<T, ServerFnError>
-where
-    F: FnOnce(E) -> T,
-    E: actix_web::FromRequest,
-    <E as actix_web::FromRequest>::Error: std::fmt::Display,
-{
-    let req = use_context::<actix_web::HttpRequest>(cx)
-        .expect("HttpRequest should have been provided via context");
-    let input = E::extract(&req)
-        .await
-        .map_err(|e| ServerFnError::ServerError(e.to_string()))?;
-    Ok(f(input))
 }
