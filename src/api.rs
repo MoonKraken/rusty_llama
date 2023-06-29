@@ -14,8 +14,6 @@ pub async fn converse(cx: Scope, prompt: Conversation) -> Result<String, ServerF
     .await?;
 
     use llm::KnownModel;
-    let mut session = (*model).start_session(Default::default());
-    let inference_parameters = llm::InferenceParameters::default();
     let character_name = "### Assistant";
     let user_name = "### Human";
     let persona = "A chat between a human and an assistant.";
@@ -40,6 +38,7 @@ pub async fn converse(cx: Scope, prompt: Conversation) -> Result<String, ServerF
     let mut rng = rand::thread_rng();
     let mut buf = String::new();
 
+    let mut session = model.start_session(Default::default());
     session
         .infer(
             model.as_ref(),
@@ -48,7 +47,7 @@ pub async fn converse(cx: Scope, prompt: Conversation) -> Result<String, ServerF
                 prompt: format!("{persona}\n{history}\n{character_name}:")
                     .as_str()
                     .into(),
-                parameters: &inference_parameters,
+                parameters: &llm::InferenceParameters::default(),
                 play_back_previous_tokens: false,
                 maximum_token_count: None,
             },

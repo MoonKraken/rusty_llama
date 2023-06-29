@@ -17,14 +17,14 @@ pub fn App(cx: Scope) -> impl IntoView {
     let (conversation, set_conversation) = create_signal(cx, Conversation::new());
 
     let send = create_action(cx, move |new_message: &String| {
-        let mut curr = conversation.get_untracked();
         let user_message = Message {
             text: new_message.clone(),
             user: true,
         };
-        curr.messages.push(user_message);
-        set_conversation(curr.clone());
-        converse(cx, curr)
+        set_conversation.update(move |c| {
+            c.messages.push(user_message);
+        });
+        converse(cx, conversation())
     });
 
     create_effect(cx, move |_| {
