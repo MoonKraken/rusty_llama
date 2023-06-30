@@ -214,9 +214,9 @@ checksum = "f26201604c87b1e01bd3d98f8d5d9a8fcbb815e8cedb41ffccbeb4bf593a35fe"
 
 [[package]]
 name = "aes"
-version = "0.8.2"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "433cfd6710c9986c576a25ca913c39d66a6474107b406f34f91d4a8923395241"
+checksum = "ac1f845298e95f983ff1944b728ae08b8cebab80d684f0a832ed0fc74dfa27e2"
 dependencies = [
  "cfg-if",
  "cipher",
@@ -296,15 +296,15 @@ dependencies = [
 
 [[package]]
 name = "anstyle"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41ed9a86bf92ae6580e0a31281f65a1b1d867c0cc68d5346e2ae128dddfa6a7d"
+checksum = "3a30da5c5f2d5e72842e00bcb57657162cdabef0931f40e2deb9b4140440cecd"
 
 [[package]]
 name = "anstyle-parse"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e765fd216e48e067936442276d1d57399e37bce53c264d6fefbe298080cb57ee"
+checksum = "938874ff5980b03a87c5524b3ae5b59cf99b1d6bc836848df7bc5ada9643c333"
 dependencies = [
  "utf8parse",
 ]
@@ -622,9 +622,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.3.3"
+version = "4.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca8f255e4b8027970e78db75e78831229c9815fdbfa67eb1a1b777a62e24b4a0"
+checksum = "384e169cc618c613d5e3ca6404dda77a8685a63e08660dcc64abaf7da7cb0c7a"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -633,13 +633,12 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.3.3"
+version = "4.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "acd4f3c17c83b0ba34ffbc4f8bbd74f079413f747f84a6f89292f138057e36ab"
+checksum = "ef137bbe35aab78bdb468ccfba75a5f4d8321ae011d34063770780545176af2d"
 dependencies = [
  "anstream",
  "anstyle",
- "bitflags",
  "clap_lex",
  "strsim",
 ]
@@ -1279,16 +1278,17 @@ dependencies = [
 [[package]]
 name = "ggml"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
  "ggml-sys",
+ "memmap2",
  "thiserror",
 ]
 
 [[package]]
 name = "ggml-sys"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
  "cc",
 ]
@@ -1705,8 +1705,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "leptos"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "312dd390314de105e516a401be0e76420602c62df4bcd3cd3747b72feba847bb"
 dependencies = [
  "cfg-if",
  "leptos_config",
@@ -1721,8 +1722,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_actix"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53b021312131fa995360cb1e8631c4f6ff30187f743ab7cbd5afe6827c10e98d"
 dependencies = [
  "actix-http",
  "actix-web",
@@ -1739,8 +1741,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_config"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4eab1f4e6a7cf900c54532fd1bdfb125679661b036eb858869778f3ce46ac96d"
 dependencies = [
  "config",
  "regex",
@@ -1751,8 +1754,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_dom"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c9b40351a6cf0b0c81578dbf38dad27ed11bd3fd70467362c9e328484b90d626"
 dependencies = [
  "async-recursion",
  "cfg-if",
@@ -1769,6 +1773,7 @@ dependencies = [
  "paste",
  "rustc-hash",
  "serde_json",
+ "server_fn",
  "smallvec",
  "tracing",
  "wasm-bindgen",
@@ -1778,8 +1783,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_hot_reload"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "837e9d66ead1e8ec00110f0aa9f44352eb5dd5407b0874c5b2bc68de0af83f71"
 dependencies = [
  "anyhow",
  "camino",
@@ -1795,8 +1801,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_integration_utils"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a73d8b66b53771cf72b96b906ac7a4313c289192f5d2168bf3f31d731e506966"
 dependencies = [
  "futures",
  "leptos",
@@ -1808,8 +1815,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_macro"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "277934fa915a3e7da2485f265bc3d624fc5d84476776056b64e102b4ddf2a1e2"
 dependencies = [
  "attribute-derive",
  "cfg-if",
@@ -1830,8 +1838,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_meta"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3eee45d4e34691d44e9faebaa55c025ab771653d82744488a9a02b28ca4f2b37"
 dependencies = [
  "cfg-if",
  "indexmap",
@@ -1843,8 +1852,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_reactive"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d769235d0c62bb4256926ac0a93771ccf2de63c8638912d064a62327fc895c9f"
 dependencies = [
  "base64 0.21.2",
  "cfg-if",
@@ -1867,8 +1877,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_router"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ff659a8594b9bfc427d5465b71e66b19cf542626df7553ab12af9393462295f6"
 dependencies = [
  "cached",
  "cfg-if",
@@ -1895,8 +1906,9 @@ dependencies = [
 
 [[package]]
 name = "leptos_server"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1ef017d5399c51a61889720253080bf001701e204240a33fdf2271662d2283d"
 dependencies = [
  "inventory",
  "lazy_static",
@@ -1958,7 +1970,7 @@ checksum = "ef53942eb7bf7ff43a617b3e2c1c4a5ecf5944a7c1bc12d7ee39bbb15e5c1519"
 [[package]]
 name = "llm"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
  "llm-base",
  "llm-bloom",
@@ -1973,7 +1985,7 @@ dependencies = [
 [[package]]
 name = "llm-base"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
  "bytemuck",
  "ggml",
@@ -1991,16 +2003,15 @@ dependencies = [
 [[package]]
 name = "llm-bloom"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
- "bytemuck",
  "llm-base",
 ]
 
 [[package]]
 name = "llm-gpt2"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
  "bytemuck",
  "llm-base",
@@ -2009,39 +2020,32 @@ dependencies = [
 [[package]]
 name = "llm-gptj"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
- "bytemuck",
  "llm-base",
 ]
 
 [[package]]
 name = "llm-gptneox"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
- "bytemuck",
  "llm-base",
- "serde",
 ]
 
 [[package]]
 name = "llm-llama"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
- "bytemuck",
  "llm-base",
- "rand",
- "thiserror",
 ]
 
 [[package]]
 name = "llm-mpt"
 version = "0.2.0-dev"
-source = "git+https://github.com/rustformers/llm?branch=main#e011ce8f8a53b4fe55cc030b216f91625efe46d7"
+source = "git+https://github.com/rustformers/llm.git?branch=main#9a222690cd0a9e3322bb6a926d54e90d08fb2c0f"
 dependencies = [
- "bytemuck",
  "llm-base",
 ]
 
@@ -2972,8 +2976,9 @@ dependencies = [
 
 [[package]]
 name = "server_fn"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eb258b7b6d45f4a3cb052c3e8be4cc4384dc611c15bbac269d5dde5ebfa0ca60"
 dependencies = [
  "ciborium",
  "const_format",
@@ -2996,8 +3001,9 @@ dependencies = [
 
 [[package]]
 name = "server_fn_macro"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ff19adebdc13918c14a04596df83ae9273923c6f4366338aeeefa577b1f70e50"
 dependencies = [
  "const_format",
  "proc-macro-error",
@@ -3010,8 +3016,9 @@ dependencies = [
 
 [[package]]
 name = "server_fn_macro_default"
-version = "0.3.0"
-source = "git+https://github.com/leptos-rs/leptos?branch=main#55bb63edea430e6c4756c9d9cd73d9ecfd50e1c7"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c5096e1dcd5ac7bb86325d6d19ae3b7dca450190f0fd99d76c08e1abebc7df3"
 dependencies = [
  "server_fn_macro",
  "syn 2.0.18",

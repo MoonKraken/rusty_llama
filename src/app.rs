@@ -1,6 +1,5 @@
 use leptos::*;
 use leptos_meta::*;
-use leptos_router::*;
 
 mod components;
 use components::chat_area::ChatArea;
@@ -24,7 +23,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         set_conversation.update(move |c| {
             c.messages.push(user_message);
         });
-        converse(cx, conversation())
+        converse(cx, conversation.get())
     });
 
     create_effect(cx, move |_| {

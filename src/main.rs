@@ -1,4 +1,3 @@
-// mod api;
 use cfg_if::cfg_if;
 
 #[cfg(feature = "ssr")]
@@ -24,12 +23,13 @@ async fn main() -> std::io::Result<()> {
         actix_files::NamedFile::open_async("./style/output.css").await
     }
 
+    let model = web::Data::new(get_language_model());
     HttpServer::new(move || {
         let leptos_options = &conf.leptos_options;
         let site_root = &leptos_options.site_root;
 
         App::new()
-            .app_data(web::Data::new(get_language_model()))
+            .app_data(model.clone())
             .service(css)
             .route("/api/{tail:.*}", leptos_actix::handle_server_fns())
             .leptos_routes(
@@ -54,11 +54,10 @@ cfg_if! {
             use std::path::PathBuf;
             dotenv().ok();
             let model_path = env::var("MODEL_PATH").expect("MODEL_PATH must be set");
-            let vocabulary_source = llm::VocabularySource::Model;
 
             llm::load::<Llama>(
                 &PathBuf::from(&model_path),
-                vocabulary_source,
+                llm::TokenizerSource::Embedded,
                 Default::default(),
                 llm::load_progress_callback_stdout,
             )
