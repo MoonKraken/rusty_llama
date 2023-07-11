@@ -8,8 +8,8 @@ A simple webapp to showcase the ability to write a simple chatbot webapp using o
 ## Setup Instructions
 You'll need to use the nightly Rust toolchain, and install the `wasm32-unknown-unknown` target as well as the Trunk and `cargo-leptos` tools:
 ```
-rust toolchain install nightly
-rust target add wasm32-unknown-unknown
+rustup toolchain install nightly
+rustup target add wasm32-unknown-unknown
 cargo install trunk cargo-leptos
 ```
 
