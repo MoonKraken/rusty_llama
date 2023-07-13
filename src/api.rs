@@ -26,9 +26,9 @@ pub async fn converse(cx: Scope, prompt: Conversation) -> Result<String, ServerF
     for message in prompt.messages.into_iter() {
         let msg = message.text;
         let curr_line = if message.user {
-            format!("{character_name}:{msg}\n")
-        } else {
             format!("{user_name}:{msg}\n")
+        } else {
+            format!("{character_name}:{msg}\n")
         };
 
         history.push_str(&curr_line);
