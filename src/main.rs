@@ -54,11 +54,17 @@ cfg_if! {
             use std::path::PathBuf;
             dotenv().ok();
             let model_path = env::var("MODEL_PATH").expect("MODEL_PATH must be set");
+            let model_parameters = llm::ModelParameters {
+                prefer_mmap: true,
+                context_size: 2048,
+                lora_adapters: None,
+                use_gpu: true,
+            };
 
             llm::load::<Llama>(
                 &PathBuf::from(&model_path),
                 llm::TokenizerSource::Embedded,
-                Default::default(),
+                model_parameters,
                 llm::load_progress_callback_stdout,
             )
             .unwrap_or_else(|err| {
