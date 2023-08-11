@@ -12,21 +12,27 @@ actix-files = { version = "0.6", optional = true }
 actix-web = { version = "4", optional = true, features = ["macros"] }
 console_error_panic_hook = "0.1"
 cfg-if = "1"
-leptos = "0.4"
-leptos_meta = "0.4"
-leptos_actix = { version = "0.4", optional = true }
-leptos_router = "0.4"
+leptos = "0.4.6"
+leptos_meta = "0.4.6"
+leptos_actix = { version = "0.4.6", optional = true }
+leptos_router = "0.4.6"
 wasm-bindgen = "=0.2.87"
-serde = { version = "1.0.160", features = ["derive"] }
+serde = { version = "1.0.178", features = ["derive"] }
 rand = { version = "0.8.5", optional = true }
 env_logger = "0.10.0"
 dotenv ={ version = "0.15.0", optional = true }
 llm = { git = "https://github.com/rustformers/llm.git", branch = "main", optional = true, features = ["metal"] }
+actix-ws = { version = "0.2.5", optional = true }
+actix-rt = { verson = "2.8.0", optional = true }
+futures = { version = "0.3.28", optional = true }
+gloo-net = { version = "0.3.1"}
+tokio = "1.29.1"
+web-sys = { version = "0.3.64" }
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
-hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]
-ssr = ["dep:actix-files", "dep:actix-web", "dep:leptos_actix", "leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:rand", "dep:dotenv", "dep:llm"]
+hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate", "gloo-net/websocket", "dep:futures"]
+ssr = ["dep:actix-files", "dep:actix-web", "dep:leptos_actix", "leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:rand", "dep:dotenv", "dep:llm", "dep:actix-ws", "dep:actix-rt", "dep:futures", "tokio/sync"]
 
 [profile.dev.package.ggml-sys]
 opt-level = 3

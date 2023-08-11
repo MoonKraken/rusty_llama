@@ -1,5 +1,9 @@
 use cfg_if::cfg_if;
 
+use api::ws;
+pub mod api;
+pub mod model;
+
 #[cfg(feature = "ssr")]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -31,6 +35,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(model.clone())
             .service(css)
+            .route("/ws", web::get().to(ws))
             .route("/api/{tail:.*}", leptos_actix::handle_server_fns())
             .leptos_routes(
                 leptos_options.to_owned(),
@@ -59,6 +64,8 @@ cfg_if! {
                 context_size: 2048,
                 lora_adapters: None,
                 use_gpu: true,
+                gpu_layers: None,
+                rope_overrides: None,
             };
 
             llm::load::<Llama>(
