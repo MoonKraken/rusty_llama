@@ -3,17 +3,8 @@
 @tailwind utilities;
 
 @layer components {
-    .testing-class {
-        @apply bg-gray-800;
-
-    }
-    .text-area {
-        @apply w-full border-none resize-none focus:outline-none focus:ring-0 placeholder-gray-500;
-    }
-    .sidebar-icon {
-        @apply relative flex items-center justify-center
-                h-12 w-12 mt-2 mb-2 mx-auto shadow-lg
-                bg-gray-800 text-green-500
-                hover:bg-green-600;
-    }
+  .input-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(50, 50, 50, 255); /* Adjust the color as needed */
+  }
 }

@@ -1,5 +1,5 @@
 <picture>
-<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/screenshot.png" />
+<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/demo.gif" />
 </picture>
 
 # Rusty Llama Webapp

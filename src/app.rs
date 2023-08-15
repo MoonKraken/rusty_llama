@@ -16,6 +16,10 @@ pub fn App(cx: Scope) -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context(cx);
 
+    // allow any component to get dark mode state via context
+    let (dark_mode, set_dark_mode) = create_signal(cx, true);
+    provide_context(cx, dark_mode);
+
     let (conversation, set_conversation) = create_signal(cx, Conversation::new());
 
     use gloo_net::websocket::futures::WebSocket;
