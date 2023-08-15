@@ -13,10 +13,10 @@ const BUTTON_CLASS_LIGHT: &str = "bg-blue-500 text-white";
 const BUTTON_CLASS_DARK: &str = "bg-green-700 text-white";
 
 #[component]
-pub fn TypeArea(cx: Scope, send: Action<String, Result<(), ServerFnError>>) -> impl IntoView {
-    let dark_mode = use_context::<ReadSignal<bool>>(cx).expect("should be able to get dark mode state");
+pub fn TypeArea(send: Action<String, Result<(), ServerFnError>>) -> impl IntoView {
+    let dark_mode = use_context::<ReadSignal<bool>>().expect("should be able to get dark mode state");
 
-    let type_area_class = Signal::derive(cx, move || {
+    let type_area_class = Signal::derive(move || {
       if dark_mode.get() {
         format!("{TYPE_AREA_CLASS} {TYPE_AREA_CLASS_DARK}")
       } else {
@@ -24,7 +24,7 @@ pub fn TypeArea(cx: Scope, send: Action<String, Result<(), ServerFnError>>) -> i
       }
     });
 
-    let text_area_class = Signal::derive(cx, move || {
+    let text_area_class = Signal::derive(move || {
       if dark_mode.get() {
         format!("{TEXT_AREA_CLASS} {TEXT_AREA_CLASS_DARK}")
       } else {
@@ -32,7 +32,7 @@ pub fn TypeArea(cx: Scope, send: Action<String, Result<(), ServerFnError>>) -> i
       }
     });
 
-    let button_class = Signal::derive(cx, move || {
+    let button_class = Signal::derive(move || {
       if dark_mode.get() {
         format!("{BUTTON_CLASS} {BUTTON_CLASS_DARK}")
       } else {
@@ -40,8 +40,8 @@ pub fn TypeArea(cx: Scope, send: Action<String, Result<(), ServerFnError>>) -> i
       }
     });
 
-    let input_ref = create_node_ref::<Input>(cx);
-    view!{ cx,
+    let input_ref = create_node_ref::<Input>();
+    view!{
         <div class={type_area_class.get()}>
            <form class="w-full flex justify-center items-center gap-4" on:submit=move |ev| {
                 ev.prevent_default();

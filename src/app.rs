@@ -12,15 +12,15 @@ use components::type_area::TypeArea;
 use crate::model::conversation::{Conversation, Message};
 
 #[component]
-pub fn App(cx: Scope) -> impl IntoView {
+pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
-    provide_meta_context(cx);
+    provide_meta_context();
 
     // allow any component to get dark mode state via context
-    let (dark_mode, set_dark_mode) = create_signal(cx, true);
-    provide_context(cx, dark_mode);
+    let (dark_mode, set_dark_mode) = create_signal(true);
+    provide_context(dark_mode);
 
-    let (conversation, set_conversation) = create_signal(cx, Conversation::new());
+    let (conversation, set_conversation) = create_signal(Conversation::new());
 
     use gloo_net::websocket::futures::WebSocket;
     use gloo_net::websocket::Message::Text as Txt;
@@ -29,7 +29,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         = Default::default();
 
     let client_clone_baby = client.clone();
-    create_effect(cx, move |_| {
+    create_effect(move |_| {
         let location = web_sys::window().unwrap().location();
         let hostname = location.hostname().expect("failed to retrieve origin hostname");
         let ws_url = format!("ws://{hostname}:3000/ws");
@@ -53,7 +53,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         *client_clone_baby.borrow_mut() = Some(sender);
     });
 
-    let send = create_action(cx, move |new_message: &String| {
+    let send = create_action(move |new_message: &String| {
         let user_message = Message {
             text: new_message.clone(),
             user: true,
@@ -75,7 +75,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         }
     });
 
-    create_effect(cx, move |_| {
+    create_effect(move |_| {
         if let Some(_) = send.input().get() {
             let model_message = Message {
                 text: String::new(),
@@ -88,8 +88,8 @@ pub fn App(cx: Scope) -> impl IntoView {
         }
     });
 
-    view! { cx,
-        <Stylesheet id="leptos" href="/pkg/leptos_start.css"/>
+    view! {
+        <Stylesheet id="leptos" href="/pkg/rusty_llama.css"/>
 
         // sets the document title
         <Title text="Rusty Llama"/>

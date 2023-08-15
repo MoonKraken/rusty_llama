@@ -1,5 +1,5 @@
 [package]
-name = "leptos_start"
+name = "rusty_llama"
 version = "0.1.0"
 edition = "2021"
 authors = ["Code to the Moon <ken@cttm.io>"]
@@ -12,12 +12,12 @@ actix-files = { version = "0.6", optional = true }
 actix-web = { version = "4", optional = true, features = ["macros"] }
 console_error_panic_hook = "0.1"
 cfg-if = "1"
-leptos = "0.4.6"
-leptos_meta = "0.4.6"
-leptos_actix = { version = "0.4.6", optional = true }
-leptos_router = "0.4.6"
+leptos = "0.5.0-beta"
+leptos_meta = "0.5.0-beta"
+leptos_actix = { version = "0.5.0-beta", optional = true }
+leptos_router = "0.5.0-beta"
 wasm-bindgen = "=0.2.87"
-serde = { version = "1.0.178", features = ["derive"] }
+serde = { version = "1.0.183", features = ["derive"] }
 rand = { version = "0.8.5", optional = true }
 env_logger = "0.10.0"
 dotenv ={ version = "0.15.0", optional = true }
@@ -25,8 +25,8 @@ llm = { git = "https://github.com/rustformers/llm.git", branch = "main", optiona
 actix-ws = { version = "0.2.5", optional = true }
 actix-rt = { verson = "2.8.0", optional = true }
 futures = { version = "0.3.28", optional = true }
-gloo-net = { version = "0.3.1"}
-tokio = "1.29.1"
+gloo-net = { version = "0.4.0"}
+tokio = "1.31.0"
 web-sys = { version = "0.3.64" }
 
 [features]
@@ -39,7 +39,7 @@ opt-level = 3
 
 [package.metadata.leptos]
 # The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
-output-name = "leptos_start"
+output-name = "rusty_llama"
 # The site root folder is where cargo-leptos generate all output. WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
 site-root = "target/site"
 # The site-root relative folder where all compiled output (JS, WASM and CSS) is written
