@@ -54,7 +54,7 @@ pub fn ChatArea(conversation: ReadSignal<Conversation>) -> impl IntoView {
         <div class={chat_area_class.get()} node_ref=chat_div_ref>
         {move || conversation.get().messages.iter().map(move |message| {
             let class_str = if message.user { user_message_class.get() } else { model_message_class.get()};
-            view! {cx,
+            view! {
               <div class={class_str}>
                 {message.text.clone()}
               </div>
