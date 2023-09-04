@@ -72,7 +72,7 @@ RUN adduser \
 USER appuser
 
 # grab the model
-COPY --from=build llama-2-13b-chat.ggmlv3.q4_K_S.bin /bin/model
+COPY --from=build /app/llama-2-13b-chat.ggmlv3.q4_K_S.bin /bin/model
 ENV MODEL_PATH=/bin/model
 # Copy the executable from the "build" stage.
 COPY --from=build /app/target/server/release/$APP_NAME /bin/
