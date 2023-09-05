@@ -39,37 +39,16 @@ RUN npm install
 RUN npx tailwindcss -i ./input.css -o ./style/output.css
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo leptos build --release -vv
-# RUN cp ./target/server/release/$APP_NAME /bin/server
-# RUN cp -r ./target/site /bin/site
 
 ################################################################################
-# Create a new stage for running the application that contains the minimal
-# runtime dependencies for the application. This often uses a different base
-# image from the build stage where the necessary files are copied from the build
-# stage.
-#
-# The example below uses the debian bookworm image as the foundation for running the app.
-# By specifying the "slim-bookworm" tag, it will also use whatever happens to be the
-# most recent version of that tag when you build your Dockerfile. If
-# reproducability is important, consider using a digest
-# (e.g., debian@sha256:ac707220fbd7b67fc19b112cee8170b41a9e97f703f588b2cdbbcdcecdd8af57).
-FROM rustlang/rust:nightly-bookworm AS final
+# final image
+
+FROM debian:12 AS final
+ARG APP_NAME
 #
 # install openssl
 RUN apt-get update && apt-get install -y openssl
 # RUN apk --no-cache add openssl
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
 
 # grab the model
 COPY --from=build /app/llama-2-13b-chat.ggmlv3.q4_K_S.bin /bin/model
@@ -78,8 +57,10 @@ ENV MODEL_PATH=/bin/model
 COPY --from=build /app/target/server/release/$APP_NAME /bin/server
 
 # Copy the frontend stuff
-COPY --from=build /app/target/site /bin/site
+COPY --from=build /app/target/site /bin/target/site
 
+# because leptos is configured to look in target/site for the static files
+WORKDIR /bin
 # Expose the port that the application listens on.
 EXPOSE 3000
 
