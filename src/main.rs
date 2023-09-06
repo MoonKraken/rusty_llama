@@ -18,7 +18,10 @@ async fn main() -> std::io::Result<()> {
     use rusty_llama::app::*;
 
     let conf = get_configuration(None).await.unwrap();
-    let addr = conf.leptos_options.site_addr;
+    let options = &conf.leptos_options;
+    let addr = options.site_addr;
+
+    log!("leptos options: {options:?}");
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(|| view! { <App/> });
 
