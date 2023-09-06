@@ -6,7 +6,6 @@ ARG MODEL_NAME=llama-2-13b-chat.ggmlv3.q4_K_S.bin
 ################################################################################
 # build step
 FROM rust:${RUST_VERSION}-bookworm AS build
-ARG APP_NAME
 ARG NODE_MAJOR
 WORKDIR /app
 
@@ -49,7 +48,7 @@ COPY --from=build /app/target/server/release/$APP_NAME /app/server
 # Copy the frontend stuff
 COPY --from=build /app/target/site /app/target/site
 
-ENV MODEL_PATH=/bin/model
+ENV MODEL_PATH=/app/model
 ENV LEPTOS_SITE_ADDR=0.0.0.0:3000
 # because leptos is configured to look in target/site for the static files
 WORKDIR /app
