@@ -4,25 +4,26 @@ ARG NODE_MAJOR=20
 ARG MODEL_NAME=llama-2-13b-chat.ggmlv3.q4_K_S.bin
 
 ################################################################################
+# tailwind first
+FROM node:${NODE_MAJOR} AS tailwind-build
+WORKDIR /app
+COPY ./input.css .
+COPY ./tailwind.config.js .
+COPY ./package.json .
+RUN npm install
+RUN npx tailwindcss -i ./input.css -o ./output.css
+
+################################################################################
 # build step
 FROM rust:${RUST_VERSION}-bookworm AS build
-ARG NODE_MAJOR
 WORKDIR /app
 
-# get the latest version of node
-# this is all from here https://github.com/nodesource/distributions#debian-versions
 RUN apt-get update
-RUN apt-get install -y ca-certificates curl gnupg
-RUN mkdir -p /etc/apt/keyrings
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-RUN apt-get update && apt-get install -y pkg-config openssl libssl-dev nodejs
+RUN apt-get install -y pkg-config openssl libssl-dev curl
 
-# Run the tailwind build
 COPY . .
-RUN npm install
-RUN npx tailwindcss -i ./input.css -o ./style/output.css
-
+# copy the tailwind output from the node container
+COPY --from=tailwind-build /app/output.css /app/style/output.css
 # add WASM
 RUN rustup target add wasm32-unknown-unknown
 # install leptos build tool
