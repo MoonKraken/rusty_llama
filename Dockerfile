@@ -14,7 +14,7 @@ RUN npm install
 RUN npx tailwindcss -i ./input.css -o ./output.css
 
 ################################################################################
-# build step
+# rust build
 FROM rust:${RUST_VERSION}-bookworm AS build
 WORKDIR /app
 
