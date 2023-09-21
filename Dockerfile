@@ -39,21 +39,6 @@ COPY --from=build /app/target/site ./target/site
 ENV MODEL_PATH=/app/model
 ENV LEPTOS_SITE_ADDR=0.0.0.0:3000
 
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
-RUN chown -R appuser:appuser /app
-RUN chmod -R 755 /app
-
-USER appuser
-
 EXPOSE 3000
 
 CMD ["/app/server"]
