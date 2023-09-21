@@ -50,7 +50,7 @@ RUN adduser \
     appuser
 USER appuser
 
-RUN chown -R appuser:appuser
+RUN chown -R appuser:appuser /app
 RUN chmod -R 755 /app
 
 EXPOSE 3000
