@@ -48,10 +48,11 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
-USER appuser
 
 RUN chown -R appuser:appuser /app
 RUN chmod -R 755 /app
+
+USER appuser
 
 EXPOSE 3000
 
