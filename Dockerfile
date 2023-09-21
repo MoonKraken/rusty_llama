@@ -36,7 +36,7 @@ COPY --from=build /app/$MODEL ./model
 COPY --from=build /app/target/server/release/$APP_NAME ./server
 COPY --from=build /app/target/site ./target/site
 
-ENV MODEL_PATH=/bin/model
+ENV MODEL_PATH=/app/model
 ENV LEPTOS_SITE_ADDR=0.0.0.0:3000
 
 ARG UID=10001
