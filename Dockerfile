@@ -32,7 +32,7 @@ ARG MODEL_NAME
 RUN apt-get update && apt-get install -y openssl
 
 WORKDIR /app
-COPY --from=build /app/$MODEL ./model
+COPY --from=build /app/$MODEL_NAME ./model
 COPY --from=build /app/target/server/release/$APP_NAME ./server
 COPY --from=build /app/target/site ./target/site
 
