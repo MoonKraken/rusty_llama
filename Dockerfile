@@ -6,9 +6,10 @@ ARG MODEL_NAME=llama-2-13b-chat.ggmlv3.q4_K_S.bin
 FROM node:${NODE_MAJOR} AS tailwind-build
 
 WORKDIR /app
-COPY ./input.css .
-COPY ./tailwind.config.js .
-COPY ./package.json .
+COPY src src
+COPY input.css .
+COPY tailwind.config.js .
+COPY package.json .
 RUN npm install
 RUN npx tailwindcss -i ./input.css -o ./output.css
 
@@ -32,9 +33,9 @@ ARG MODEL_NAME
 RUN apt-get update && apt-get install -y openssl
 
 WORKDIR /app
-COPY --from=build /app/$MODEL_NAME ./model
-COPY --from=build /app/target/server/release/$APP_NAME ./server
-COPY --from=build /app/target/site ./target/site
+COPY --from=build /app/$MODEL_NAME model
+COPY --from=build /app/target/server/release/$APP_NAME server
+COPY --from=build /app/target/site target/site
 
 ENV MODEL_PATH=/app/model
 ENV LEPTOS_SITE_ADDR=0.0.0.0:3000
