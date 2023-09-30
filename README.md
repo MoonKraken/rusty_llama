@@ -28,8 +28,8 @@ Install TailwindCSS with `npm install -D tailwindcss`
 ### Run
 To run the project locally, 
 1. run `npx tailwindcss -i ./input.css -o ./style/output.css --watch` in a terminal - this will build `style/output.css` and automatically rebuild when a change is detected in `input.css`
-1. `cargo leptos watch` in the project directory. 
-1. In in your browser, navigate to [http://localhost:3000/?](http://localhost:3000/?)
+2. `cargo leptos watch` in the project directory. 
+3. In in your browser, navigate to [http://localhost:3000/?](http://localhost:3000/?)
 
 ## Tested Models
 * [Wizard-Vicuna-7B-Uncensored.ggmlv3.q8_0.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGML)
