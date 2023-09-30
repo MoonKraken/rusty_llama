@@ -17,7 +17,7 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     // allow any component to get dark mode state via context
-    let (dark_mode, set_dark_mode) = create_signal(true);
+    let (dark_mode, _) = create_signal(true);
     provide_context(dark_mode);
 
     let (conversation, set_conversation) = create_signal(Conversation::new());
