@@ -32,6 +32,7 @@ To run the project locally,
 1. In in your browser, navigate to [http://localhost:3000/?](http://localhost:3000/?)
 
 ## Tested Models
+* [llama-2-13b-chat.ggmlv3.q4_K_S.bin](https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML)
 * [Wizard-Vicuna-7B-Uncensored.ggmlv3.q8_0.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGML)
 * [Wizard-Vicuna-7B-Uncensored.ggmlv3.q4_K_S.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGML)
 * [Wizard-Vicuna-30B-Uncensored.ggmlv3.q2_K.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-30B-Uncensored-GGML)
