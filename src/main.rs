@@ -66,6 +66,7 @@ cfg_if! {
                 use_gpu: true,
                 gpu_layers: None,
                 rope_overrides: None,
+                n_gqa: None,
             };
 
             llm::load::<Llama>(
