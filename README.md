@@ -1,5 +1,5 @@
 <picture>
-<img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/demo.gif" />
+<img src="https://github.com/MoonKraken/DrawsNotes/blob/main/demo.gif" />
 </picture>
 
 # Rusty Llama Webapp
