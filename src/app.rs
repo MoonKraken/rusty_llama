@@ -1,99 +1,145 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
-use futures::stream::SplitSink;
-use leptos::*;
-use leptos_meta::*;
+use leptos::prelude::*;
+use leptos_meta::{provide_meta_context, Stylesheet, Title};
+use leptos_router::{
+    components::{Route, Router, Routes},
+    StaticSegment,
+};
 
 mod components;
 use components::chat_area::ChatArea;
 use components::type_area::TypeArea;
 
+#[cfg(target_arch = "wasm32")]
+use crate::api::ChatEvent;
 use crate::model::conversation::{Conversation, Message};
 
 #[component]
 pub fn App() -> impl IntoView {
-    // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
 
-    // allow any component to get dark mode state via context
-    let (dark_mode, _) = create_signal(true);
-    provide_context(dark_mode);
+    view! {
+        <Stylesheet id="leptos" href="/pkg/rusty_llama.css"/>
+        <Title text="Rusty Llama"/>
+        <Router>
+            <Routes fallback=|| "Not found.">
+                <Route path=StaticSegment("") view=ChatPage/>
+            </Routes>
+        </Router>
+    }
+}
 
-    let (conversation, set_conversation) = create_signal(Conversation::new());
+#[component]
+fn ChatPage() -> impl IntoView {
+    let (conversation, set_conversation) = signal(Conversation::new());
+    let busy = Signal::derive(move || {
+        conversation.with(|conversation| {
+            conversation
+                .messages
+                .last()
+                .is_some_and(|message| !message.user && message.pending)
+        })
+    });
 
-    use gloo_net::websocket::futures::WebSocket;
-    use gloo_net::websocket::Message::Text as Txt;
-    use futures::{SinkExt, StreamExt};
-    let client: Rc<RefCell<Option<SplitSink<WebSocket, gloo_net::websocket::Message>>>>
-        = Default::default();
+    // The browser build opens the socket. SSR renders the page and does not.
+    #[cfg(target_arch = "wasm32")]
+    let outgoing_tx = {
+        use futures::StreamExt;
+        use leptos::server_fn::error::ServerFnError;
+        use std::cell::RefCell;
+        use std::rc::Rc;
 
-    let client_clone_baby = client.clone();
-    create_effect(move |_| {
-        let location = web_sys::window().unwrap().location();
-        let hostname = location.hostname().expect("failed to retrieve origin hostname");
-        let ws_url = format!("ws://{hostname}:3000/ws");
-
-        let connection = WebSocket::open(&format!("{ws_url}")).expect("failed to establish WebSocket connection");
-
-        let (sender, mut recv) = connection.split();
-        spawn_local(async move {
-            while let Some(msg) = recv.next().await {
-                match msg {
-                    Ok(Txt(msg)) => {
-                        set_conversation.update(move |c| {
-                            c.messages.last_mut().unwrap().text.push_str(&msg);
+        let (outgoing_tx, outgoing_rx) = futures::channel::mpsc::unbounded();
+        let outgoing_rx = Rc::new(RefCell::new(Some(outgoing_rx)));
+        Effect::new(move |_| {
+            let Some(outgoing_rx) = outgoing_rx.borrow_mut().take() else {
+                return;
+            };
+            leptos::task::spawn_local(async move {
+                let input = outgoing_rx.map(|text| Ok::<_, ServerFnError>(text));
+                let mut incoming = match crate::api::chat(input.into()).await {
+                    Ok(incoming) => incoming,
+                    Err(err) => {
+                        leptos::logging::error!("chat socket: {err}");
+                        set_conversation.update(|conversation| {
+                            if let Some(last) = conversation
+                                .messages
+                                .last_mut()
+                                .filter(|message| !message.user)
+                            {
+                                last.text.push_str(&format!("\n[connection error: {err}]"));
+                                last.pending = false;
+                            }
                         });
+                        return;
                     }
-                    _ => { break; }
+                };
+
+                while let Some(message) = incoming.next().await {
+                    match message {
+                        Ok(ChatEvent::Token(token)) => {
+                            set_conversation.update(|conversation| {
+                                if let Some(last) = conversation.messages.last_mut() {
+                                    last.text.push_str(&token);
+                                }
+                            });
+                        }
+                        Ok(ChatEvent::Done) => {
+                            set_conversation.update(|conversation| {
+                                if let Some(last) = conversation.messages.last_mut() {
+                                    last.pending = false;
+                                }
+                            });
+                        }
+                        Err(err) => {
+                            leptos::logging::error!("chat stream: {err}");
+                            set_conversation.update(|conversation| {
+                                if let Some(last) = conversation.messages.last_mut() {
+                                    last.text.push_str(&format!("\n[stream error: {err}]"));
+                                    last.pending = false;
+                                }
+                            });
+                            break;
+                        }
+                    }
                 }
-            }
+            });
         });
+        outgoing_tx
+    };
 
-        *client_clone_baby.borrow_mut() = Some(sender);
-    });
-
-    let send = create_action(move |new_message: &String| {
-        let user_message = Message {
-            text: new_message.clone(),
-            user: true,
-        };
-        set_conversation.update(move |c| {
-            c.messages.push(user_message);
-        });
-
-        let client2 = client.clone();
-        let msg = new_message.to_string();
-        async move {
-            client2
-                .borrow_mut()
-                .as_mut()
-                .unwrap()
-                .send(Txt(msg.to_string()))
-                .await
-                .map_err(|_| ServerFnError::ServerError("WebSocket issue".to_string()))
+    let send = UnsyncCallback::new(move |new_message: String| {
+        if new_message.trim().is_empty() {
+            return;
         }
-    });
-
-    create_effect(move |_| {
-        if let Some(_) = send.input().get() {
-            let model_message = Message {
+        set_conversation.update(|conversation| {
+            conversation.messages.push(Message {
+                text: new_message.clone(),
+                user: true,
+                pending: false,
+            });
+            conversation.messages.push(Message {
                 text: String::new(),
                 user: false,
-            };
+                pending: true,
+            });
+        });
 
-            set_conversation.update(move |c| {
-                c.messages.push(model_message);
+        #[cfg(target_arch = "wasm32")]
+        if outgoing_tx.unbounded_send(new_message).is_err() {
+            leptos::logging::error!("chat socket is closed");
+            set_conversation.update(|conversation| {
+                if let Some(last) = conversation.messages.last_mut() {
+                    last.pending = false;
+                    last.text.push_str("\n[chat socket is closed]");
+                }
             });
         }
     });
 
     view! {
-        <Stylesheet id="leptos" href="/pkg/rusty_llama.css"/>
-
-        // sets the document title
-        <Title text="Rusty Llama"/>
-        <ChatArea conversation/>
-        <TypeArea send/>
+        <main class="mx-auto flex h-full w-full max-w-3xl flex-col px-4 sm:px-6">
+            <ChatArea conversation/>
+            <TypeArea send busy/>
+        </main>
     }
 }

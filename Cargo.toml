@@ -11,31 +11,46 @@ crate-type = ["cdylib", "rlib"]
 actix-files = { version = "0.6", optional = true }
 actix-web = { version = "4", optional = true, features = ["macros"] }
 console_error_panic_hook = "0.1"
-cfg-if = "1"
-leptos = "0.5.0-beta"
-leptos_meta = "0.5.0-beta"
-leptos_actix = { version = "0.5.0-beta", optional = true }
-leptos_router = "0.5.0-beta"
-wasm-bindgen = "=0.2.89"
-serde = { version = "1.0.183", features = ["derive"] }
-rand = { version = "0.8.5", optional = true }
-env_logger = "0.10.0"
-dotenv ={ version = "0.15.0", optional = true }
-llm = { git = "https://github.com/rustformers/llm.git", branch = "main", optional = true, features = ["metal"] }
-actix-ws = { version = "0.2.5", optional = true }
-actix-rt = { version = "2.8.0", optional = true }
-futures = { version = "0.3.28", optional = true }
-gloo-net = { version = "0.4.0"}
-tokio = "1.31.0"
-web-sys = { version = "0.3.64" }
+ammonia = "4"
+pulldown-cmark = "0.13"
+leptos = "0.8"
+leptos_meta = "0.8"
+leptos_actix = { version = "0.8", optional = true }
+leptos_router = "0.8"
+wasm-bindgen = "0.2"
+serde = { version = "1", features = ["derive"] }
+env_logger = "0.11"
+log = "0.4"
+dotenv = { version = "0.15", optional = true }
+# Pinned to the latest release. The crates.io package lags the GitHub releases.
+# Metal is the default accelerator. Swap `metal` for `cuda` on NVIDIA, or drop
+# the feature for a CPU-only build.
+mistralrs = { git = "https://github.com/EricLBuehler/mistral.rs", tag = "v0.9.4", optional = true, features = ["metal"] }
+futures = "0.3"
+tokio = { version = "1", features = ["sync"] }
 
 [features]
-csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]
-hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate", "gloo-net/websocket", "dep:futures"]
-ssr = ["dep:actix-files", "dep:actix-web", "dep:leptos_actix", "leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:rand", "dep:dotenv", "dep:llm", "dep:actix-ws", "dep:actix-rt", "dep:futures", "tokio/sync"]
+csr = ["leptos/csr"]
+hydrate = ["leptos/hydrate"]
+ssr = [
+  "dep:actix-files",
+  "dep:actix-web",
+  "dep:leptos_actix",
+  "leptos/ssr",
+  "leptos_meta/ssr",
+  "leptos_router/ssr",
+  "dep:dotenv",
+  "dep:mistralrs",
+  "tokio/rt",
+]
 
-[profile.dev.package.ggml-sys]
-opt-level = 3
+# Size-optimized profile for the WASM bundle in release mode.
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = "abort"
 
 [package.metadata.leptos]
 # The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
@@ -45,8 +60,9 @@ site-root = "target/site"
 # The site-root relative folder where all compiled output (JS, WASM and CSS) is written
 # Defaults to pkg
 site-pkg-dir = "pkg"
-# [Optional] The source CSS file. If it ends with .sass or .scss then it will be compiled by dart-sass into CSS. The CSS is optimized by Lightning CSS before being written to <site-root>/<site-pkg>/app.css
-style-file = "style/output.css"
+# cargo-leptos compiles this with its Tailwind binary and writes
+# target/site/pkg/rusty_llama.css. Tailwind v4 scans the Rust sources.
+tailwind-input-file = "input.css"
 # Assets source dir. All files found here will be copied and synchronized to site-root.
 # The assets-dir cannot have a sub directory with the same name/path as site-pkg-dir.
 #
@@ -63,8 +79,6 @@ end2end-cmd = "npx playwright test"
 end2end-dir = "end2end"
 #  The browserlist query used for optimizing the CSS.
 browserquery = "defaults"
-# Set by cargo-leptos watch when building with that tool. Controls whether autoreload JS will be included in the head
-watch = false
 # The environment Leptos will run in, usually either "DEV" or "PROD"
 env = "DEV"
 # The features to use when compiling the bin target
@@ -86,3 +100,8 @@ lib-features = ["hydrate"]
 #
 # Optional. Defaults to false.
 lib-default-features = false
+
+# The profile to use for the lib target when compiling for release
+#
+# Optional. Defaults to "release".
+lib-profile-release = "wasm-release"

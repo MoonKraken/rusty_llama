@@ -1,62 +1,64 @@
-use leptos::{*, html::Input};
+use std::rc::Rc;
 
-const TYPE_AREA_CLASS: &str = "h-24 w-full fixed bottom-0 flex justify-center items-center p-5 border-t";
-const TYPE_AREA_CLASS_LIGHT: &str = "bg-white border-gray-300";
-const TYPE_AREA_CLASS_DARK: &str = "bg-zinc-900 border-zinc-700";
-
-const TEXT_AREA_CLASS: &str = "w-2/3 p-4 border rounded-full input-field";
-const TEXT_AREA_CLASS_LIGHT: &str = "border-gray-300 text-black";
-const TEXT_AREA_CLASS_DARK: &str = "bg-zinc-700 border-zinc-700 text-white";
-
-const BUTTON_CLASS: &str = "h-full p-4 rounded-full cursor-pointer" ;
-const BUTTON_CLASS_LIGHT: &str = "bg-blue-500 text-white";
-const BUTTON_CLASS_DARK: &str = "bg-green-700 text-white";
+use leptos::html::Textarea;
+use leptos::prelude::*;
 
 #[component]
-pub fn TypeArea(send: Action<String, Result<(), ServerFnError>>) -> impl IntoView {
-    let dark_mode = use_context::<ReadSignal<bool>>().expect("should be able to get dark mode state");
-
-    let type_area_class = Signal::derive(move || {
-      if dark_mode.get() {
-        format!("{TYPE_AREA_CLASS} {TYPE_AREA_CLASS_DARK}")
-      } else {
-        format!("{TYPE_AREA_CLASS} {TYPE_AREA_CLASS_LIGHT}")
-      }
+pub fn TypeArea(send: UnsyncCallback<String>, busy: Signal<bool>) -> impl IntoView {
+    let (empty, set_empty) = signal(true);
+    let composer = NodeRef::<Textarea>::new();
+    let send_message = Rc::new(move || {
+        if busy.get_untracked() {
+            return;
+        }
+        let Some(input) = composer.get() else {
+            return;
+        };
+        let text = input.value();
+        if text.trim().is_empty() {
+            return;
+        }
+        send.run(text);
+        input.set_value("");
+        set_empty.set(true);
     });
+    let send_on_key = send_message.clone();
 
-    let text_area_class = Signal::derive(move || {
-      if dark_mode.get() {
-        format!("{TEXT_AREA_CLASS} {TEXT_AREA_CLASS_DARK}")
-      } else {
-        format!("{TEXT_AREA_CLASS} {TEXT_AREA_CLASS_LIGHT}")
-      }
-    });
-
-    let button_class = Signal::derive(move || {
-      if dark_mode.get() {
-        format!("{BUTTON_CLASS} {BUTTON_CLASS_DARK}")
-      } else {
-        format!("{BUTTON_CLASS} {BUTTON_CLASS_LIGHT}")
-      }
-    });
-
-    let input_ref = create_node_ref::<Input>();
-    view!{
-        <div class={type_area_class.get()}>
-           <form class="w-full flex justify-center items-center gap-4" on:submit=move |ev| {
-                ev.prevent_default();
-                let input = input_ref.get().expect("input to exist");
-                send.dispatch(input.value());
-                input.set_value("");
-           }
-           >
-                <input class={text_area_class.get()} type="text" placeholder="Enter your prompt" node_ref=input_ref/>
-                <button class={button_class.get()} type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                    </svg>
-                </button>
-           </form>
-        </div>
+    view! {
+        <form class="border-t border-zinc-700 py-4" on:submit=move |ev| {
+            ev.prevent_default();
+            send_message();
+        }>
+            <label class="sr-only" for="composer">"Message"</label>
+            <div class="rounded-3xl bg-zinc-700 p-2 shadow-sm ring-1 ring-zinc-600 focus-within:ring-blue-500">
+                <textarea
+                    id="composer"
+                    rows="3"
+                    maxlength="8000"
+                    placeholder="Write a message"
+                    class="block w-full resize-none bg-transparent px-3 py-2 text-base text-white outline-none placeholder:text-zinc-400"
+                    node_ref=composer
+                    on:input=move |ev| {
+                        set_empty.set(event_target_value(&ev).trim().is_empty());
+                    }
+                    on:keydown=move |ev| {
+                        if ev.key() == "Enter" && !ev.shift_key() && !ev.is_composing() {
+                            ev.prevent_default();
+                            send_on_key();
+                        }
+                    }
+                ></textarea>
+                <div class="flex items-center justify-between gap-3 px-2 pb-1">
+                    <p class="text-xs text-zinc-400">"Enter to send · Shift+Enter for a new line"</p>
+                    <button
+                        type="submit"
+                        class="rounded-full bg-green-700 px-4 py-1.5 text-sm font-semibold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:bg-zinc-600 disabled:text-zinc-400"
+                        disabled=move || busy.get() || empty.get()
+                    >
+                        {move || if busy.get() { "Sending…" } else { "Send" }}
+                    </button>
+                </div>
+            </div>
+        </form>
     }
 }

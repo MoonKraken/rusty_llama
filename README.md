@@ -5,36 +5,49 @@
 # Rusty Llama Webapp
 A simple webapp to showcase the ability to write a simple chatbot webapp using only Rust, TailwindCSS and an Open Source language model such as a variant of GPT, LLaMA, etc.
 
+Inference is handled in-process by [mistral.rs](https://github.com/EricLBuehler/mistral.rs). The UI is a [Leptos](https://leptos.dev) 0.8 app served by Actix.
+
 ## Setup Instructions
 
 ### Hardware
-By default, the project has Apple's Metal acceleration enabled. If you are not on a macOS system, you may need to disable the `metal` feature in `Cargo.toml`. Similarly, if you are on a system with an Nvidia GPU, you may need to add CUDA as a feature (I haven't tested this, anyone who does so feel free to PR an update to this readme).
+By default, the project enables Apple's Metal backend through the `metal` feature on the `mistralrs` dependency in `Cargo.toml`. On an NVIDIA machine, replace `metal` with `cuda`. For a CPU-only build, remove the feature list.
+
+The Metal feature compiles GPU shaders while the server crate builds. Xcode 26 and later do not ship that compiler inside Xcode. It is a separate component, the Metal Toolchain. Install it once:
+
+```
+xcodebuild -runFirstLaunch
+xcodebuild -downloadComponent MetalToolchain
+xcrun metal --version
+```
+
+`xcodebuild -runFirstLaunch` updates Xcode's system packages and asks for an administrator password. Let it finish. `xcrun metal --version` should then print a version. Until it does, `cargo leptos watch` stops while compiling mistral.rs shaders.
 
 ### Rust Toolchain
-You'll need to use the nightly Rust toolchain, and install the `wasm32-unknown-unknown` target as well as the Trunk and `cargo-leptos` tools:
+Stable Rust 1.88 or newer is required, along with the `wasm32-unknown-unknown` target and `cargo-leptos`:
+
 ```
-rustup toolchain install nightly
 rustup target add wasm32-unknown-unknown
-cargo install trunk cargo-leptos
+cargo install cargo-leptos --locked
 ```
+
 ### Model
-You'll also need to download a model (in GGML format) of your choice that is [supported by the Rustformers/llm Crate](https://huggingface.co/models?search=ggml).
+The default is [Qwen3.8 27B](https://huggingface.co/bartowski/Qwen3.8-27B-GGUF), the `Q4_K_M` GGUF (about 17 GB). `.env` sets `MODEL_REPO` and `MODEL_FILE`. mistral.rs downloads that file from Hugging Face into `~/.cache/huggingface` the first time the server starts, then reuses the cache. No separate download step is required. A Hugging Face token is only needed for gated repos. This one is public.
 
-In the root of the project directory, you'll find a `.env` file where an environment variable called `MODEL_PATH` is defined. Replace the value with the full path to the desired model file.
+To use a different quant, change `MODEL_FILE` to another filename in that repo, such as `Qwen3.8-27B-Q6_K.gguf`. To use a file you already have, set `MODEL_PATH` to a `.gguf` file or a directory of GGUF shards. `MODEL_PATH` overrides the Hugging Face settings. Older GGML `.bin` files are not supported.
 
-### TailwindCSS
-Install TailwindCSS with `npm install -D tailwindcss`
+If a file has no embedded chat template, set `CHAT_TEMPLATE` to a Jinja template string or a path to a `.json` template file.
 
 ### Run
-To run the project locally, 
-1. run `npx tailwindcss -i ./input.css -o ./style/output.css --watch` in a terminal - this will build `style/output.css` and automatically rebuild when a change is detected in `input.css`
-1. `cargo leptos watch` in the project directory. 
-1. In in your browser, navigate to [http://localhost:3000/?](http://localhost:3000/?)
+To run the project locally,
 
-## Tested Models
-* [Wizard-Vicuna-7B-Uncensored.ggmlv3.q8_0.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGML)
-* [Wizard-Vicuna-7B-Uncensored.ggmlv3.q4_K_S.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-7B-Uncensored-GGML)
-* [Wizard-Vicuna-30B-Uncensored.ggmlv3.q2_K.bin](https://huggingface.co/TheBloke/Wizard-Vicuna-30B-Uncensored-GGML)
+1. `cargo leptos watch` in the project directory. This compiles Tailwind from `input.css` into the site CSS.
+1. In your browser, open [http://localhost:3000/](http://localhost:3000/).
+
+The first server build compiles mistral.rs and its Metal kernels, so it takes a while.
+
+## Example Models
+* [Qwen3.8-27B-Q4_K_M.gguf](https://huggingface.co/bartowski/Qwen3.8-27B-GGUF) (default)
+* [Qwen3.8-27B-Q6_K.gguf](https://huggingface.co/bartowski/Qwen3.8-27B-GGUF) (higher quality, about 24 GB)
 
 <picture>
 <img src="https://raw.githubusercontent.com/Me163/rusty_llama/main/metal_llama.png" />

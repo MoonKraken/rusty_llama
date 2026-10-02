@@ -1,10 +1,170 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "./src";
 
-@layer components {
-  .input-field:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(50, 50, 50, 255); /* Adjust the color as needed */
-  }
+/* A hairline that marks the scroll position without a visible track. */
+#transcript,
+#composer,
+.md pre {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.22) transparent;
+}
+
+#transcript::-webkit-scrollbar,
+#composer::-webkit-scrollbar,
+.md pre::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+#transcript::-webkit-scrollbar-track,
+#composer::-webkit-scrollbar-track,
+.md pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#transcript::-webkit-scrollbar-thumb,
+#composer::-webkit-scrollbar-thumb,
+.md pre::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-color: rgb(255 255 255 / 0.2);
+  background-clip: padding-box;
+}
+
+#transcript::-webkit-scrollbar-thumb:hover,
+#composer::-webkit-scrollbar-thumb:hover,
+.md pre::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(255 255 255 / 0.4);
+}
+
+.md {
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.md > :first-child {
+  margin-top: 0;
+}
+
+.md > :last-child {
+  margin-bottom: 0;
+}
+
+.md p {
+  margin: 0.65em 0;
+}
+
+.md h1,
+.md h2,
+.md h3 {
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0.9em 0 0.35em;
+}
+
+.md h1 {
+  font-size: 1.25rem;
+}
+
+.md h2 {
+  font-size: 1.1rem;
+}
+
+.md h3 {
+  font-size: 1rem;
+}
+
+.md ul,
+.md ol {
+  margin: 0.5em 0;
+  padding-left: 1.2em;
+}
+
+.md ul {
+  list-style: disc;
+}
+
+.md ol {
+  list-style: decimal;
+}
+
+.md li {
+  margin: 0.15em 0;
+}
+
+.md li > p {
+  margin: 0.15em 0;
+}
+
+.md a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgb(255 255 255 / 0.4);
+}
+
+.md a:hover {
+  text-decoration-color: currentColor;
+}
+
+.md code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  border-radius: 0.4rem;
+  padding: 0.08em 0.35em;
+  background: rgb(0 0 0 / 0.28);
+}
+
+.md pre {
+  margin: 0.8em 0;
+  padding: 0.85em 1em;
+  overflow-x: auto;
+  border-radius: 0.9rem;
+  background: rgb(0 0 0 / 0.38);
+}
+
+.md pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.md blockquote {
+  margin: 0.75em 0;
+  padding-left: 0.85em;
+  border-left: 2px solid rgb(255 255 255 / 0.35);
+  color: rgb(255 255 255 / 0.86);
+}
+
+.md hr {
+  margin: 1em 0;
+  border: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.18);
+}
+
+.md table {
+  width: 100%;
+  margin: 0.75em 0;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.md th,
+.md td {
+  padding: 0.35em 0.55em;
+  text-align: left;
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+}
+
+.md th {
+  font-weight: 600;
+}
+
+.md img {
+  max-width: 100%;
+  border-radius: 0.75rem;
 }
